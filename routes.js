@@ -22,7 +22,9 @@ router.post('/event',allowedOperationsValidator(),async(req,res)=>{
     const {type,destination,origin,amount} = req.body
     try {
         const balance = balanceInstance.processEvent({type,destination,origin,amount})
-        return res.status(200).json(balance)
+        
+        if(!balance) return res.status(404).send(0)
+        return res.status(201).json(balance)
     } catch (error) {
         console.log(error)
         return res.status(400).send('Fail to perform request')
@@ -31,7 +33,7 @@ router.post('/event',allowedOperationsValidator(),async(req,res)=>{
 
 router.post('/reset',(req,res)=>{
     balanceInstance.resetAccounts()
-    return res.status(200).send(0)
+    return res.status(200).send('OK')
 })
 
 export default router

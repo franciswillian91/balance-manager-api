@@ -32,6 +32,8 @@ export default class Balance{
 
     withdraw(event){
         const currentBalance = this.accounts.get(event.origin)
+        if(!currentBalance) return false
+
         const newBalance = Number(currentBalance) - Number(event.amount)
 
         this.accounts.set(event.origin,newBalance)
@@ -46,6 +48,10 @@ export default class Balance{
 
     transfer(event){
         const currentOriginBalance = this.accounts.get(event.origin)
+        if(!currentOriginBalance) return false
+        
+        if(!this.accounts.get(event.destination)) this.accounts.set(event.destination,0)
+            
         const currentDestinationBalance = this.accounts.get(event.destination)
         const newOriginBalance = Number(currentOriginBalance) - Number(event.amount)
         const newDestinationBalance = Number(currentDestinationBalance) + Number(event.amount)
